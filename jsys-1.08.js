@@ -255,27 +255,32 @@ p._setAutoFade = function (flag, endFunc)
 p._rmAutoFade = function ()
 	{ return this.css({opacity: '', WebkitTransition: '', MozTransition: '', OTransition: '', transition: ''}) }
 
-p.beginClickaway = function (input)
+p.beginClickaway = function (input, kbOnly)
 {
-	if (this._clickaway) return;
 	var that = this;
-	this._clickaway = function(e)
+	if (!this._clickaway && !kbOnly)
 	{
-		if (!e.target.within(that) && (!input || !e.target.within(input)))
-			that.hide();
-		return false;
-	}
-	document.addEventListener('click', this._clickaway, true);
-	this._keyaway = function(e)
-	{
-		var key = e.charCode || e.keyCode;
-		if (key == 27 || key == 9)
+		this._clickaway = function(e)
 		{
-			that.hide();
-			return key != 27;
+			if (!e.target.within(that) && (!input || !e.target.within(input)))
+				that.hide();
+			return false;
 		}
+		document.addEventListener('click', this._clickaway, true);
 	}
-	document.addEventListener('keydown', this._keyaway, true);
+	if (!this._keyaway)
+	{
+		this._keyaway = function(e)
+		{
+			var key = e.charCode || e.keyCode;
+			if (key == 27 || (input && key == 9))
+			{
+				that.hide();
+				return key != 27;
+			}
+		}
+		document.addEventListener('keydown', this._keyaway, true);
+	}
 	return this;
 }
 
@@ -592,7 +597,8 @@ function httpGet(url, callback)
 
 
 // --- SHOW MODAL WINDOW
-
+// Requires the following CSS classes:
+//     .modal-win, .modal-body, .rxwrap, .rx, .modal-content, .modal-buttons
 
 var DLG_OK =		0x0001;
 var DLG_YESNO =		0x0002;
@@ -616,8 +622,7 @@ function showModal(content, flags, yesFunc)
 			$('greyall').autoFadeOut(function () { this.hide() });
 	}
 
-	if (flags & DLG_CLICKAWAY)
-		win.beginClickaway();
+	win.beginClickaway(null, !(flags & DLG_CLICKAWAY));
 
 	var body = win.add(newDiv('modal-body' + (flags & DLG_ERRMSG ? ' errmsg' : '')));
 	body.add(newDiv('rxwrap'));
