@@ -1,5 +1,5 @@
 //
-//  JavaScript System Library v1.08
+//  JavaScript System Library v1.09
 //
 //  DOM Shortcuts and utilities for IE9+ and the rest of the sane browsers
 //
@@ -597,8 +597,10 @@ function httpGet(url, callback)
 
 
 // --- SHOW MODAL WINDOW
-// Requires the following CSS classes:
-//     .modal-win, .modal-body, .rxwrap, .rx, .modal-content, .modal-buttons
+
+// The following CSS classes can be defined in order to customize the modal window:
+//     .modal-win, .modal-body, .x, .modal-content, .modal-buttons
+// The '.x' element is clickable and is programmed to close the window.
 
 var DLG_OK =		0x0001;
 var DLG_YESNO =		0x0002;
@@ -606,31 +608,78 @@ var DLG_SUBMIT =	0x0004;
 var DLG_ERRMSG =	0x0008 | DLG_OK;
 var DLG_CLICKAWAY = 0x2000;
 
+function greyAll()
+{
+	greyAll.cnt || (greyAll.cnt = 0);
+	if (++greyAll.cnt == 1)
+	{
+		greyAll.elem = newDiv('greyall');
+		greyAll.elem.css({
+			position: 'fixed',
+			width: '100%',
+			height: '100%',
+			background: 'rgba(255, 255, 255, 0.5)',
+			opacity: 0,
+		}).autoFadeIn();
+		document.body.ins(greyAll.elem);
+	}
+}
 
-var _modalCnt = 0;
+
+function ungreyAll()
+{
+	if (greyAll.cnt-- == 1)
+	{
+		greyAll.elem.autoFadeOut();
+		delete greyAll.elem;
+	}
+}
+
 
 function showModal(content, flags, yesFunc)
 {
 	flags || (flags = 0);
-	var win = newElem('div', 'modal-win');
 
+	var win = newElem('div', 'modal-win');
+	win.css({
+		position: 'fixed',
+		minWidth: '300px',
+		width: '40%',
+		top: '20%',
+		left: 0,
+		right: 0,
+		margin: 'auto',
+		boxShadow: '1px 1px 5px #999',
+	});
 	win.hide = function ()
 	{
 		HTMLElement.prototype.hide.call(this);
 		this.timeout(Element.prototype.rmSelf);
-		if (--_modalCnt == 0)
-			$('greyall').autoFadeOut(function () { this.hide() });
+		ungreyAll();
 	}
-
 	win.beginClickaway(null, !(flags & DLG_CLICKAWAY));
 
 	var body = win.add(newDiv('modal-body' + (flags & DLG_ERRMSG ? ' errmsg' : '')));
-	body.add(newDiv('rxwrap'));
-	body.add(newDiv('rx')).onclick = function () { win.hide() };
-	body.add(newDiv('modal-content'));
+	body.css({
+		position: 'relative',
+		background: '#fff',
+		padding: '20px',
+	});
+
+	var x = body.add(newDiv('x'));
+	x.on('click', function () { win.hide() });
+	x.css({ position: 'absolute', top: '5px', right: '5px', });
+
+	var cont = body.add(newDiv('modal-content'));
+	cont.css({overflow: 'auto', maxHeight: '10em'});
+	cont.innerHTML =
+		typeof content == 'function' ? content() :
+			typeof content == 'object' ? content.innerHTML : (content || '');
+
 	if (flags & (DLG_OK | DLG_YESNO | DLG_SUBMIT))
 	{
 		var btnDiv = body.add(newDiv('modal-buttons'));
+		btnDiv.css({ textAlign: 'center', marginTop: '15px' });
 		if (flags & DLG_YESNO)
 		{
 			btnDiv.add(newButton('Yes',
@@ -648,17 +697,13 @@ function showModal(content, flags, yesFunc)
 					{ win.hide(); window._errobj && window._errobj.select() },
 				true));
 	}
-	$('page').add(win);
-	win.$c0('modal-content').innerHTML =
-		typeof content == 'function' ? content() :
-			typeof content == 'object' ? content.innerHTML :
-				(content || '');
-	$('greyall').autoFadeIn();
-	_modalCnt++;
-	return win.show();
+
+	document.body.ins(win);
+	greyAll();
+	return win;
 }
 
 
 function notimpl()
-	{ showModal('Feature not implemented yet.', DLG_OK) }
+	{ showModal('Feature not implemented yet.', DLG_YESNO) }
 
