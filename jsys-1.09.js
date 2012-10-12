@@ -678,24 +678,19 @@ function showModal(content, flags, yesFunc)
 
 	if (flags & (DLG_OK | DLG_YESNO | DLG_SUBMIT))
 	{
+		function yes() { yesFunc && yesFunc(); win.hide() }
+		function no() { win.hide() }
 		var btnDiv = body.add(newDiv('modal-buttons'));
 		btnDiv.css({ textAlign: 'center', marginTop: '15px' });
 		if (flags & DLG_YESNO)
 		{
-			btnDiv.add(newButton('Yes',
-				function () { win.hide(); yesFunc() },
-				true));
-			btnDiv.add(newButton('No', function() { win.hide() }));
+			btnDiv.add(newButton('Yes', yes, true));
+			btnDiv.add(newButton('No', no));
 		}
 		else if (flags & DLG_SUBMIT)
-			btnDiv.add(newButton('Submit',
-				function () { win.hide(); yesFunc() },
-				true));
+			btnDiv.add(newButton('Submit', yes, true));
 		else if (flags & DLG_OK)
-			btnDiv.add(newButton('OK',
-				function ()
-					{ win.hide(); window._errobj && window._errobj.select() },
-				true));
+			btnDiv.add(newButton('OK', yes, true));
 	}
 
 	document.body.ins(win);
