@@ -606,7 +606,7 @@ var DLG_OK =		0x0001;
 var DLG_YESNO =		0x0002;
 var DLG_SUBMIT =	0x0004;
 var DLG_ERRMSG =	0x0008 | DLG_OK;
-var DLG_CLICKAWAY = 0x2000;
+var DLG_CLICKAWAY =	0x2000;
 
 function greyAll()
 {
@@ -705,5 +705,5 @@ function showModal(content, flags, yesFunc)
 
 
 function notimpl()
-	{ showModal('Feature not implemented yet.', DLG_YESNO) }
+	{ showModal('Feature not implemented yet.', DLG_OK) }
 
