@@ -44,8 +44,11 @@ $DEBUG_MODE = (int)cfg_read_value('DEBUG', 0);
 // --- ERROR REPORTING ---------------------------------------------------- //
 
 
-error_reporting(E_ALL | E_STRICT);
-ini_set('display_errors', $DEBUG_MODE ? 'On' : 'Off');
+if ($DEBUG_MODE)
+{
+	error_reporting(E_ALL | E_STRICT);
+	ini_set('display_errors', 'On');
+}
 
 
 set_exception_handler(function($e) { fatal('(Uncaught exception) ' . $e->getMessage()); });
@@ -106,9 +109,6 @@ function _dump($v)
 
 
 // --- SHORTCUTS ----------------------------------------------------------- //
-
-if (get_magic_quotes_gpc())
-	fatal($DEBUG_MODE ? 'PHP setting magic_quotes_gpc should be off' : 'Internal 1006');
 
 
 function html($s)		{ return htmlspecialchars($s); }
@@ -301,6 +301,7 @@ function lines_to_array($lines)
 	{ return $lines ?
 		array_map(function ($i) { return stripslashes($i); }, explode("\n", $lines)) :
 		[]; }
+
 
 function array_to_lines($a)
 	{ return $a ?

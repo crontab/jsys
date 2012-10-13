@@ -5,25 +5,7 @@ if (!defined('SQL_DEBUG'))
 	define('SQL_DEBUG', false);
 
 
-class ESql extends Exception
-{
-	var $query = '';
-
-	function __construct($msg, $query = '')
-	{
-		parent::__construct($msg);
-		$this->query = $query;
-	}
-
-	function __toString()
-	{
-		$r = parent::__toString();
-		if ($this->query != '')
-			$r .= ' [Query: ' . $this->query . ']';
-		return $r;
-	}
-}
-
+class ESql extends Exception { }
 
 class ESqlDuplicate extends ESql { }
 
@@ -74,7 +56,7 @@ class database extends mysqli
 	{
 		self::query_nofail($query);
 		if ($this->error == 1062)
-			throw new ESqlDuplicate($this->error, $query);
+			throw new ESqlDuplicate($this->error);
 		else if ($this->errno)
 			self::fail();
 	}
@@ -146,6 +128,8 @@ class database extends mysqli
 }
 
 
+// Master (default) database, always connect to it
+
 $DB = new database();
 
 
@@ -154,7 +138,7 @@ $DB = new database();
 // ------------------------------------------------------------------------ //
 
 
-class join_info
+class _join_info
 {
 	var $table_name;
 	var $condition;
@@ -212,7 +196,7 @@ class sql_view extends view
 
 	function add_left_join($table_name, $condition, array $field_list, $real_name = '')
 	{
-		$this->left_joins[] = new join_info($table_name, $condition, $real_name);
+		$this->left_joins[] = new _join_info($table_name, $condition, $real_name);
 		$this->add_static_fields($table_name, $field_list);
 	}
 

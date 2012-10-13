@@ -615,7 +615,9 @@ function greyAll()
 	{
 		greyAll.elem = newDiv('greyall');
 		greyAll.elem.css({
+			zIndex: 999,
 			position: 'fixed',
+			left: 0, top: 0,
 			width: '100%',
 			height: '100%',
 			background: 'rgba(255, 255, 255, 0.5)',
@@ -642,6 +644,7 @@ function showModal(content, flags, yesFunc)
 
 	var win = newElem('div', 'modal-win');
 	win.css({
+		zIndex: 1000,
 		position: 'fixed',
 		minWidth: '300px',
 		width: '40%',

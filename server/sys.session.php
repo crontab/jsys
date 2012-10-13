@@ -1,6 +1,20 @@
 <? require_once 'sys.db.php' ?>
 <?
 
+/*
+
+	CREATE TABLE sessions (
+		id VARCHAR(32) CHARACTER SET ascii NOT NULL DEFAULT '',
+		created TIMESTAMP NOT NULL DEFAULT 0,
+		user_id INT NOT NULL DEFAULT 0,
+		ip_address VARCHAR(15) CHARACTER SET ascii NOT NULL DEFAULT '',
+		data TEXT NOT NULL DEFAULT '',
+		UNIQUE KEY id (id),
+		KEY created (created)
+	) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+*/
+
 const SESSION_COOKIE_NAME = 'HM_SID';
 const SESSION_URI_PARAM_NAME = '_HM_SID';
 const SESSION_COOKIE_PATH = '/';
@@ -17,7 +31,6 @@ const SESSION_DONT_KNOW = -1;	// or rather, "don't care"
 // Globals
 $SESSION_ID = '';
 $USER_ID = 0;
-$CLIENT_IP = '';
 $SESSION = [];
 $_save_session_data = '';
 $_save_user_id = 0;
@@ -69,7 +82,7 @@ function session_begin($persistent = SESSION_DONT_KNOW)
 function session_retrieve($session_id)
 {
 	global $DB;
-	global $SESSION_ID, $USER_ID, $CLIENT_IP, $SESSION;
+	global $SESSION_ID, $USER_ID, $SESSION;
 	global $_save_session_data, $_save_user_id;
 
 	if ($session_id == '' ||
@@ -81,7 +94,6 @@ function session_retrieve($session_id)
 	$obj = $DB->first_obj(sprintf('SELECT user_id, ip_address, data FROM sessions WHERE id=%s', sql_str($session_id)));
 	if ($obj)
 	{
-		$CLIENT_IP = $obj->ip_address;
 		$_save_user_id = $USER_ID = $obj->user_id;
 		if ($obj->data != '')
 		{
