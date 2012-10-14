@@ -1,4 +1,4 @@
-<? require_once 'sys.php' ?>
+<?  require_once 'sys.php' ?>
 <?
 
 

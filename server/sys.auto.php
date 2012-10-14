@@ -1,4 +1,4 @@
-<? require_once 'sys.db.php' ?>
+<?  require_once 'sys.db.php' ?>
 <?
 
 function __autoload($class_name)

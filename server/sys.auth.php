@@ -1,4 +1,4 @@
-<? require_once 'sys.session.php' ?>
+<?  require_once 'sys.session.php' ?>
 <?
 
 const REDIRECT_COOKIE_NAME = 'HM_REDIR';

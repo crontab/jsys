@@ -1,4 +1,4 @@
-<? require_once 'sys.view.php' ?>
+<?  require_once 'sys.view.php' ?>
 <?
 
 if (!defined('SQL_DEBUG'))

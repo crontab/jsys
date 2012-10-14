@@ -40,6 +40,9 @@ function cfg_read_value($name, $default = '')
 
 $DEBUG_MODE = (int)cfg_read_value('DEBUG', 0);
 
+function is_debug_mode()
+	{ global $DEBUG_MODE; return $DEBUG_MODE; }
+
 
 // --- ERROR REPORTING ---------------------------------------------------- //
 
@@ -351,8 +354,7 @@ function output_file($file_path, $mime = NULL, $dont_cache = false, $filename = 
 
 function redirect($url)
 {
-	global $DEBUG_MODE;
-	if ($DEBUG_MODE && ob_get_length())
+	if (is_debug_mode() && ob_get_length())
 		ob_flush(); // force printing of notices and diag messages, if any
 	header("Location: $url");
 	exit();

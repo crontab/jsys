@@ -1,4 +1,4 @@
-<? require_once 'sys.auth.php' ?>
+<?  require_once 'sys.auth.php' ?>
 <?
 
 if ($USER_ID == 0)

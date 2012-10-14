@@ -42,6 +42,8 @@ body,input,option,select,textarea {
 	color: #444;
 }
 
+.stdbg { background:url(/img/bg0.png); }
+
 b, strong { font-weight: bold; }
 
 small { font-size: 12px; }
@@ -58,21 +60,24 @@ small { font-size: 12px; }
 
 input[type=text], input[type=password], textarea {
 	border-radius: 3px;
-	border: 1px solid #bbb;
+	border: 2px solid #bbb;
 	box-shadow: inset 0px 0px 3px #aaa, 1px 1px 0px #fff;
 	padding: 5px 4px;
 	margin: 0;
+	-webkit-transition: all 250ms ease-in-out;
+	-moz-transition: all 250ms ease-in-out;
+	transition: all 250ms ease-in-out;
 }
 input[type=text]:focus, input[type=password]:focus, textarea:focus {
-	border: 1px solid #777;
+	border: 2px solid #aaa;
+	box-shadow: inset 0px 0px 3px #aa8, 1px 1px 0px #eee, 0 0 5px #4af;
+	outline: none;
 }
 input[type=text].search-box {
 	padding: 2px 8px 2px 20px;
 	border-radius: 1em;
 	background: url(/img/i-search.png) no-repeat left center;
 }
-input[type=text].search-box.gr { }
-input[type=text].search-box:focus { outline: none; }
 
 .abs-hidden {
 	position: absolute;
@@ -197,14 +202,13 @@ a:visited { color: #953; }
 	padding: 5px 25px 4px 25px;
 	text-decoration: none;
 	text-shadow: 0 1px 0 #fff;
-	color: #666;
 	border-radius: 1em;
 	border: 1px solid #b4b4b4;
 	overflow: hidden;
 	box-shadow: 0 0 2px #bbb;
-	-webkit-transition: all 350ms ease-in-out;
-	-moz-transition: all 350ms ease-in-out;
-	transition: all 350ms ease-in-out;
+	-webkit-transition: all 250ms ease-in-out;
+	-moz-transition: all 250ms ease-in-out;
+	transition: all 250ms ease-in-out;
 	background-color: #eee;
 	background: -webkit-linear-gradient(top, #fff 0%, #ccc 100%);
 	background: -moz-linear-gradient(top, #fff 0%, #ccc 100%);
@@ -212,6 +216,8 @@ a:visited { color: #953; }
 }
 .abtn:hover {
 	box-shadow: 0 0 5px #aaa;
+	color: #d00;
+	text-shadow: 0 1px 0 #eee, 0 0 3px #ebb;
 }
 .abtn:active {
 	background: -webkit-linear-gradient(top, #f8f8f8 0%, #e0e0e0 100%);
@@ -227,16 +233,16 @@ a:visited { color: #953; }
 .form .fld .fnam { margin-bottom: 3px; color: #888; }
 .form .fld .fval { color: #555; font-weight: bold; }
 .form .form-title { margin: 10px auto; }
-.form .form-buttons { margin: 25px 0; }
+.form .form-buttons { margin: 25px 0; text-align:center; }
 .form input[type=text], .form input[type=password] { width: 100%; }
 
 .big-form .fld { margin: 10px 0; }
-.big-form .fld .fnam { margin-bottom: 4px; }
+.big-form .fld .fnam { margin-bottom: 4px; color: #888; text-shadow: 0 1px 0 #fff; }
 .big-form .fld .fval { font-size: 22px; }
 .big-form .form-title { margin: 10px auto; }
-.big-form .form-buttons { margin: 20px 0; }
+.big-form .form-buttons { margin: 20px 0; text-align:center; }
 .big-form input[type=text], .big-form input[type=password] {
-	font-size: 22px;
+	font-size: 20px;
 	padding: 5px 7px;
 	border-radius: 6px;
 	width: 100%;
