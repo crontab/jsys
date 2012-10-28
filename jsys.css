@@ -169,8 +169,8 @@ a:visited { color: #953; }
 }
 .modal-win .modal-buttons button { margin: 0 0.75em; }
 .modal-win.larger {
-	width: 66%;
-	top: 10%;
+	width: 66% !important;
+	top: 10% !important;
 }
 .modal-win.larger:before {
 	content: '';
@@ -191,7 +191,7 @@ a:visited { color: #953; }
 	height: 26px;
 	border-radius: 50%;
 }
-.modal-win.larger .modal-content { max-height: 70%; }
+.modal-win.larger .modal-content { max-height: 70% !important; }
 
 
 
@@ -233,14 +233,14 @@ a:visited { color: #953; }
 .form .fld .fnam { margin-bottom: 3px; color: #888; }
 .form .fld .fval { color: #555; font-weight: bold; }
 .form .form-title { margin: 10px auto; }
-.form .form-buttons { margin: 25px 0; text-align:center; }
+.form .form-buttons { margin: 25px 0; text-align: center; }
 .form input[type=text], .form input[type=password] { width: 100%; }
 
 .big-form .fld { margin: 10px 0; }
 .big-form .fld .fnam { margin-bottom: 4px; color: #888; text-shadow: 0 1px 0 #fff; }
 .big-form .fld .fval { font-size: 22px; }
 .big-form .form-title { margin: 10px auto; }
-.big-form .form-buttons { margin: 20px 0; text-align:center; }
+.big-form .form-buttons { margin: 20px 0; text-align: center; }
 .big-form input[type=text], .big-form input[type=password] {
 	font-size: 20px;
 	padding: 5px 7px;
