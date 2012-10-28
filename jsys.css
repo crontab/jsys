@@ -39,7 +39,7 @@ body,input,option,select,textarea {
 	font-family: myHelv, sans-serif;
 	font-weight: 200;
 	font-size: 16px;
-	color: #444;
+	color: #555;
 }
 
 .stdbg { background:url(/img/bg0.png); }
@@ -47,6 +47,9 @@ body,input,option,select,textarea {
 b, strong { font-weight: bold; }
 
 small { font-size: 12px; }
+
+table.ftbl { border-spacing: 0; table-layout: fixed; width: 100%; }
+table.ftbl>tbody>th>td, table.ftbl>tbody>th>th { padding: 0; vertical-align: top; }
 
 .black {
 	font-family: myHelvBlack, sans-serif;
@@ -64,9 +67,9 @@ input[type=text], input[type=password], textarea {
 	box-shadow: inset 0px 0px 3px #aaa, 1px 1px 0px #fff;
 	padding: 5px 4px;
 	margin: 0;
-	-webkit-transition: all 250ms ease-in-out;
-	-moz-transition: all 250ms ease-in-out;
-	transition: all 250ms ease-in-out;
+	-webkit-transition: all 150ms ease-in-out;
+	-moz-transition: all 150ms ease-in-out;
+	transition: all 150ms ease-in-out;
 }
 input[type=text]:focus, input[type=password]:focus, textarea:focus {
 	border: 2px solid #aaa;
@@ -74,11 +77,10 @@ input[type=text]:focus, input[type=password]:focus, textarea:focus {
 	outline: none;
 }
 input[type=text].search-box {
-	padding: 2px 8px 2px 20px;
 	border-radius: 1em;
-	background: url(/img/i-search.png) no-repeat left center;
+	padding-left: 25px;
+	background: url(/img/search.png) no-repeat 5px center, #fff;
 }
-
 .abs-hidden {
 	position: absolute;
 	visibility: hidden;
@@ -89,8 +91,13 @@ input[type=text].search-box {
 	width: 0;
 }
 
+hr {
+	border: none;
+	border-top: #bbb solid 1px;
+	border-bottom: #fff solid 1px;
+}
+
 .ttl {
-	font-weight: bold;
 	font-size: 28px;
 	text-transform: uppercase;
 	text-shadow: 0 1px 0 #fff;
@@ -122,8 +129,7 @@ input[type=text].search-box {
 
 img { border: 0 none; }
 
-a:link { color: #953; }
-a:visited { color: #953; }
+a { color: #953; }
 
 
 .c1000 {
@@ -197,50 +203,56 @@ a:visited { color: #953; }
 
 /* HREF-BASED BUTTON */
 
-.abtn {
+.gbtn {
 	display: inline-block;
-	padding: 5px 25px 4px 25px;
+	padding: 6px 25px 4px 25px;
 	text-decoration: none;
+	font-weight: normal;
 	text-shadow: 0 1px 0 #fff;
 	border-radius: 1em;
 	border: 1px solid #b4b4b4;
 	overflow: hidden;
 	box-shadow: 0 0 2px #bbb;
-	-webkit-transition: all 250ms ease-in-out;
-	-moz-transition: all 250ms ease-in-out;
-	transition: all 250ms ease-in-out;
+	-webkit-transition: all 150ms ease-in-out;
+	-moz-transition: all 150ms ease-in-out;
+	transition: all 150ms ease-in-out;
+	cursor: default;
 	background-color: #eee;
 	background: -webkit-linear-gradient(top, #fff 0%, #ccc 100%);
 	background: -moz-linear-gradient(top, #fff 0%, #ccc 100%);
 	background: linear-gradient(top, #fff 0%, #ccc 100%);
 }
-.abtn:hover {
+.gbtn:hover {
 	box-shadow: 0 0 5px #aaa;
-	color: #d00;
-	text-shadow: 0 1px 0 #eee, 0 0 3px #ebb;
 }
-.abtn:active {
+.gbtn:active {
+	box-shadow: 0 0 2px #bbb;
 	background: -webkit-linear-gradient(top, #f8f8f8 0%, #e0e0e0 100%);
 	background: -moz-linear-gradient(top, #f8f8f8 0%, #e0e0e0 100%);
 	background: linear-gradient(top, #f8f8f8 0%, #e0e0e0 100%);
+}
+.gbtn.gimg { padding: 0 }
+.gbtn.gimg>img {
+	width: 22px;
+	height: 22px;
+	vertical-align: middle;
+	margin: 4px;
 }
 
 
 /* FORMS */
 
-.form { }
 .form .fld { margin: 15px 0; }
-.form .fld .fnam { margin-bottom: 3px; color: #888; }
-.form .fld .fval { color: #555; font-weight: bold; }
+.form .fnam { margin-bottom: 3px; color: #888; }
+.form .fval { position: relative; color: #555; font-weight: bold; height: 32px; }
 .form .form-title { margin: 10px auto; }
-.form .form-buttons { margin: 25px 0; text-align: center; }
+.form-buttons { margin: 25px 0; text-align: center; }
 .form input[type=text], .form input[type=password] { width: 100%; }
 
 .big-form .fld { margin: 10px 0; }
-.big-form .fld .fnam { margin-bottom: 4px; color: #888; text-shadow: 0 1px 0 #fff; }
-.big-form .fld .fval { font-size: 22px; }
+.big-form .fnam { margin-bottom: 4px; color: #888; text-shadow: 0 1px 0 #fff; }
+.big-form .fval { position: relative; font-size: 22px; height: 37px; }
 .big-form .form-title { margin: 10px auto; }
-.big-form .form-buttons { margin: 20px 0; text-align: center; }
 .big-form input[type=text], .big-form input[type=password] {
 	font-size: 20px;
 	padding: 5px 7px;
@@ -252,6 +264,6 @@ a:visited { color: #953; }
 	line-height: 1.4em;
 	text-shadow: 0 1px 0 #fff;
 }
-.big-form .abtn.form-button a {
-	padding: 7px 30px 5px 30px;
+.big-form .gbtn.gimg>img {
+	margin: 6px;
 }

@@ -129,7 +129,7 @@ function sql_like_str($s)
 	{ return sprintf("'%s%%'", addcslashes($s, "\\\'%_")); }
 
 function tesc($s)
-	{ return addcslashes($s, "\\\t\n"); }
+	{ return addcslashes($s, "\\\n\r\t"); }
 
 function strip_tags2($s)
 	{ return strip_tags(preg_replace('/(<p|<li|<br|<div)/i', ' $1', $s)); }
@@ -359,14 +359,5 @@ function redirect($url)
 	header("Location: $url");
 	exit();
 }
-
-
-function begin_xml()
-{
-	content_type('text/xml');
-	// Angle bracket + question mark is treated as embedded PHP, so:
-	echo '<' . '?xml version="1.0" encoding="UTF-8" ?' . ">\n";
-}
-
 
 ?>

@@ -560,6 +560,7 @@ function stripslashes(s)
 	return s.replace(/\\(.?)/g, function (s, n1) {
 		switch (n1) {
 			case '\\': return '\\';
+			case 'r': return '\r';
 			case 'n': return '\n';
 			case 't': return '\t';
 			case '': return '';
