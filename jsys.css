@@ -42,7 +42,7 @@ body,input,option,select,textarea {
 	color: #555;
 }
 
-.stdbg { background:url(/img/bg0.png); }
+.stdbg { background-image: url(/img/bg0.png); }
 
 b, strong { font-weight: bold; }
 
@@ -244,14 +244,14 @@ a { color: #953; }
 
 .form .fld { margin: 15px 0; }
 .form .fnam { margin-bottom: 3px; color: #888; }
-.form .fval { position: relative; color: #555; font-weight: bold; height: 32px; }
+.form .fval { color: #555; font-weight: bold; }
 .form .form-title { margin: 10px auto; }
 .form-buttons { margin: 25px 0; text-align: center; }
 .form input[type=text], .form input[type=password] { width: 100%; }
 
 .big-form .fld { margin: 10px 0; }
 .big-form .fnam { margin-bottom: 4px; color: #888; text-shadow: 0 1px 0 #fff; }
-.big-form .fval { position: relative; font-size: 22px; height: 37px; }
+.big-form .fval { font-size: 22px; }
 .big-form .form-title { margin: 10px auto; }
 .big-form input[type=text], .big-form input[type=password] {
 	font-size: 20px;
