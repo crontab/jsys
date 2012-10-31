@@ -49,7 +49,7 @@ b, strong { font-weight: bold; }
 small { font-size: 12px; }
 
 table.ftbl { border-spacing: 0; table-layout: fixed; width: 100%; }
-table.ftbl>tbody>th>td, table.ftbl>tbody>th>th { padding: 0; vertical-align: top; }
+table.ftbl>tbody>tr>th, table.ftbl>tbody>tr>td { padding: 0; vertical-align: top; }
 
 .black {
 	font-family: myHelvBlack, sans-serif;

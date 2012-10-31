@@ -1,5 +1,5 @@
 //
-//  JavaScript System Library v1.09
+//  JavaScript System Library v1.10
 //
 //  DOM Shortcuts and utilities for IE9+ and the rest of the sane browsers
 //
@@ -116,7 +116,7 @@ p.map = function (func)
 
 p.attr = function (name, val)
 {
-	if (typeof val == 'undefined')
+	if (typeof val === 'undefined')
 		return this.getAttribute(name);
 	else if (val === null)
 		this.removeAttribute(name);
@@ -127,7 +127,7 @@ p.attr = function (name, val)
 
 p.enbl = function (val)
 {
-	if (typeof val == 'undefined')
+	if (typeof val === 'undefined')
 		return this.getAttribute('disabled') === null;
 	else if (val)
 		this.removeAttribute('disabled');
@@ -143,6 +143,9 @@ p.fire = function (evtName, bubbles, cancelable)
 	return this.dispatchEvent(e);
 }
 
+p.fireChange = function ()
+	{ this.fire(); this.fire('input') }
+
 p.on = function (type, func)
 {
 	this.listeners || (this.listeners = {});
@@ -157,7 +160,7 @@ p.off = function (type, func)
 	var list;
 	if (!this.listeners || !(list = this.listeners[type]))
 		return this;
-	if (typeof func == 'undefined')
+	if (typeof func === 'undefined')
 		while (list.length)
 			this.removeEventListener(type, list.pop(), false);
 	else
@@ -178,7 +181,7 @@ p.cls = function (name, addrm)
 {
 	var c = this.className ? this.className.split(' ') : [];
 	var i = c.indexOf(name);
-	if (typeof addrm == 'undefined')
+	if (typeof addrm === 'undefined')
 		return i >= 0;
 	if (i < 0 && addrm)
 		c.push(name);
@@ -195,7 +198,7 @@ p.css = function (a, b)
 	if (typeof a == 'object')
 		for (var i in a)
 			a.hasOwnProperty(i) && (this.style[i] = a[i]);
-	else if (typeof b == 'undefined')
+	else if (typeof b === 'undefined')
 		return ''; // not implemented (because basically not needed)
 	else
 		this.style[a] = b;
@@ -239,7 +242,7 @@ p.autoFadeIn = function ()
 	{ return this.timeout(function () { this.show()._setAutoFade(1) }) }
 
 p.autoFadeOut = function (endFunc)
-	{ return this._setAutoFade(0, typeof endFunc == 'function' ? endFunc : this.rmSelf) }
+	{ return this._setAutoFade(0, typeof endFunc === 'function' ? endFunc : this.rmSelf) }
 
 p._setAutoFade = function (flag, endFunc)
 {
@@ -313,34 +316,31 @@ p.beginCapture = function ()
 p = HTMLFormElement.prototype;
 
 p.subm = function ()
-{
-	this.fire('submit') && this.off('submit');
-	this.submit();
-}
+	{ this.fire('submit') && this.submit() }
 
 
 p = HTMLInputElement.prototype;
 
-p.chk = function (flag)
+p.chk = function (flag, fireChange)
 {
-	if (typeof flag == 'undefined')
+	if (typeof flag === 'undefined')
 		return this.checked;
 	if (this.checked != flag)
 	{
 		this.checked = flag;
-		this.onchange && this.onchange();
+		fireChange && this.fireChange();
 	}
 	return this;
 }
 
 p.val = function (v, fireChange)
 {
-	if (typeof v == 'undefined')
+	if (typeof v === 'undefined')
 		return this.value;
 	if (this.value != v)
 	{
 		this.value = v;
-		fireChange && (this.fire(), this.fire('input'));
+		fireChange && this.fireChange();
 	}
 	return this;
 }
@@ -356,13 +356,13 @@ p = HTMLSelectElement.prototype;
 
 p.val = function (v, fireChange)
 {
-	if (typeof v == 'undefined')
+	if (typeof v === 'undefined')
 		return this.options[this.selectedIndex].value;
 	for (var i = 0; i < this.options.length; i++)
 		if (this.options[i].value == v)
 		{
 			this.selectedIndex = i;
-			fireChange && (this.fire(), this.fire('input'));
+			fireChange && this.fireChange();
 			return this;
 		}
 	return this;
@@ -405,6 +405,9 @@ p.map = function (func)
 p.last = function ()
 	{ if (this.length) return this[this.length - 1]; }
 
+p.has = function (x)
+	{ return this.indexOf(x) >= 0 }
+
 p.rm = function (item)
 {
 	var i = this.indexOf(item);
@@ -414,7 +417,7 @@ p.rm = function (item)
 
 
 for (i in p)
-	if (p.hasOwnProperty(i) && typeof p[i] == 'function')
+	if (p.hasOwnProperty(i) && typeof p[i] === 'function')
 		HTMLCollection.prototype[i] = NodeList.prototype[i] = p[i];
 
 
@@ -677,7 +680,7 @@ function showModal(content, flags, yesFunc)
 	var cont = body.add(newDiv('modal-content'));
 	cont.css({overflow: 'auto', maxHeight: '10em'});
 	cont.innerHTML =
-		typeof content == 'function' ? content() :
+		typeof content === 'function' ? content() :
 			typeof content == 'object' ? content.innerHTML : (content || '');
 
 	if (flags & (DLG_OK | DLG_YESNO | DLG_SUBMIT))
@@ -705,4 +708,8 @@ function showModal(content, flags, yesFunc)
 
 function notimpl()
 	{ showModal('Feature not implemented yet.', DLG_OK) }
+
+
+function showErrorMsg(s)
+        { showModal(s, DLG_ERRMSG) }
 
