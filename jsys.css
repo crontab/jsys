@@ -146,9 +146,8 @@ a { color: #953; }
 
 .grad1 {
 	background-color: #eee;
-	background: -moz-linear-gradient(top, #fff 0%, #ccc 100%);
 	background: -webkit-linear-gradient(top, #fff 0%, #ccc 100%);
-	background: linear-gradient(top, #fff 0%, #ccc 100%);
+	background: linear-gradient(to bottom, #fff 0%, #ccc 100%);
 }
 
 .x {
@@ -219,8 +218,7 @@ a { color: #953; }
 	cursor: default;
 	background-color: #eee;
 	background: -webkit-linear-gradient(top, #fff 0%, #ccc 100%);
-	background: -moz-linear-gradient(top, #fff 0%, #ccc 100%);
-	background: linear-gradient(top, #fff 0%, #ccc 100%);
+	background: linear-gradient(to bottom, #fff 0%, #ccc 100%);
 }
 .gbtn:hover {
 	box-shadow: 0 0 5px #aaa;
@@ -228,8 +226,7 @@ a { color: #953; }
 .gbtn:active {
 	box-shadow: 0 0 2px #bbb;
 	background: -webkit-linear-gradient(top, #f8f8f8 0%, #e0e0e0 100%);
-	background: -moz-linear-gradient(top, #f8f8f8 0%, #e0e0e0 100%);
-	background: linear-gradient(top, #f8f8f8 0%, #e0e0e0 100%);
+	background: linear-gradient(to bottom, #f8f8f8 0%, #e0e0e0 100%);
 }
 .gbtn.gimg { padding: 0 }
 .gbtn.gimg>img {

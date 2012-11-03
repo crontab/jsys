@@ -502,13 +502,6 @@ function newButton(html, onClick, autofocus)
 	return btn;
 }
 
-function newOption(value, text)
-{
-	var o = newElem('option', '', text);
-	o.value = value;
-	return o;
-}
-
 function _log()
 	{ console.log(Array.prototype.slice.call(arguments)) }
 
