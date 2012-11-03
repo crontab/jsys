@@ -4,13 +4,11 @@
 	box-sizing: border-box;
 }
 
-/*
 ::selection {
-	background: #c55;
+	background-color: #8ad;
 	color: white;
 	text-shadow: none;
 }
-*/
 
 @font-face {
 	font-family: myHelv;
@@ -35,7 +33,7 @@
 
 form { margin: 0; padding: 0; }
 
-body,input,option,select,textarea {
+body,input,select,textarea {
 	font-family: myHelv, sans-serif;
 	font-weight: 200;
 	font-size: 16px;
@@ -61,18 +59,23 @@ table.ftbl>tbody>tr>th, table.ftbl>tbody>tr>td { padding: 0; vertical-align: top
 	font-stretch: condensed;
 }
 
-input[type=text], input[type=password], textarea {
+input[type=text], input[type=password], input[type=date], textarea {
 	border-radius: 3px;
-	border: 2px solid #bbb;
-	box-shadow: inset 0px 0px 3px #aaa, 1px 1px 0px #fff;
-	padding: 5px 4px;
+	border: 1px solid #bbb;
+	box-shadow: inset 0px 0px 2px #bbb, 1px 1px 0px #fff;
+	padding: 6px;
+	padding-bottom: 5px;
 	margin: 0;
+	max-height: 30px;
 	-webkit-transition: all 150ms ease-in-out;
 	-moz-transition: all 150ms ease-in-out;
 	transition: all 150ms ease-in-out;
 }
-input[type=text]:focus, input[type=password]:focus, textarea:focus {
-	border: 2px solid #aaa;
+input[type=text][readonly], input[type=date][readonly], textarea[readonly] {
+	background-color: #f4f4f4 !important;
+}
+input[type=text]:focus, input[type=password]:focus, input[type=date]:focus, textarea:focus {
+	border: 1px solid #aaa;
 	box-shadow: inset 0px 0px 3px #aa8, 1px 1px 0px #eee, 0 0 5px #4af;
 	outline: none;
 }
@@ -91,6 +94,10 @@ input[type=text].search-box {
 	width: 0;
 }
 
+input::-webkit-input-placeholder { color: #aaa; }
+input:-moz-placeholder { color: #aaa; }
+input:-ms-input-placeholder { color: #aaa; }
+
 hr {
 	border: none;
 	border-top: #bbb solid 1px;
@@ -98,7 +105,7 @@ hr {
 }
 
 .ttl {
-	font-size: 28px;
+	font-size: 24px;
 	text-transform: uppercase;
 	text-shadow: 0 1px 0 #fff;
 }
@@ -204,14 +211,14 @@ a { color: #953; }
 
 .gbtn {
 	display: inline-block;
-	padding: 6px 25px 4px 25px;
+	padding: 5px 25px 4px 25px;
 	text-decoration: none;
 	font-weight: normal;
 	text-shadow: 0 1px 0 #fff;
 	border-radius: 1em;
 	border: 1px solid #b4b4b4;
 	overflow: hidden;
-	box-shadow: 0 0 2px #bbb;
+	box-shadow: 0 0 2px #ccc;
 	-webkit-transition: all 150ms ease-in-out;
 	-moz-transition: all 150ms ease-in-out;
 	transition: all 150ms ease-in-out;
@@ -220,47 +227,66 @@ a { color: #953; }
 	background: -webkit-linear-gradient(top, #fff 0%, #ccc 100%);
 	background: linear-gradient(to bottom, #fff 0%, #ccc 100%);
 }
-.gbtn:hover {
-	box-shadow: 0 0 5px #aaa;
-}
+.gbtn[disabled] { color: #aaa; box-shadow: none; }
+.gbtn:hover { box-shadow: 0 0 5px #aaa; }
+.gbtn[disabled]:hover { box-shadow: none; }
 .gbtn:active {
 	box-shadow: 0 0 2px #bbb;
 	background: -webkit-linear-gradient(top, #f8f8f8 0%, #e0e0e0 100%);
 	background: linear-gradient(to bottom, #f8f8f8 0%, #e0e0e0 100%);
 }
+.gbtn[disabled]:active { box-shadow: none; }
 .gbtn.gimg { padding: 0 }
 .gbtn.gimg>img {
-	width: 22px;
-	height: 22px;
+	width: 20px;
+	height: 20px;
 	vertical-align: middle;
 	margin: 4px;
 }
+.gbtn[disabled].gimg>img { opacity: 0.5; }
 
 
 /* FORMS */
 
-.form .fld { margin: 15px 0; }
-.form .fnam { margin-bottom: 3px; color: #888; }
-.form .fval { color: #555; font-weight: bold; }
-.form .form-title { margin: 10px auto; }
 .form-buttons { margin: 25px 0; text-align: center; }
-.form input[type=text], .form input[type=password] { width: 100%; }
 
-.big-form .fld { margin: 10px 0; }
-.big-form .fnam { margin-bottom: 4px; color: #888; text-shadow: 0 1px 0 #fff; }
-.big-form .fval { font-size: 22px; }
-.big-form .form-title { margin: 10px auto; }
-.big-form input[type=text], .big-form input[type=password] {
+.form .fld { position: relative; margin: 7px 0; }
+.form label {
+	display: block;
+	margin-bottom: 4px;
+	color: #888;
+	text-shadow: 0 1px 0 #fff;
+	vertical-align: bottom;
+}
+.form input[type=text], .form input[type=password], .form input[type=date],
+	.form textarea, .form select { width: 100%; }
+table.ftbl.fld>tbody>tr>td { padding: 2px; }
+
+.form .fval-mid {
+	display: table-cell;
+	height: 30px;
+	max-height: 30px;
+	background-color: #ddd;
+	vertical-align: middle;
+	padding: 0 3px;
+	border-radius: 3px;
+	border: 2px solid #ccc;
+	box-shadow: 1px 1px 0px #fff;
+}
+
+.big-form .fld { margin: 12px 0; }
+.big-form label {
+	display: block;
+	margin-bottom: 4px;
+	color: #888;
+	text-shadow: 0 1px 0 #fff;
+	vertical-align: bottom;
+}
+.big-form input[type=text], .big-form input[type=password], .big-form input[type=date], .big-form textarea {
 	font-size: 20px;
 	padding: 5px 7px;
 	border-radius: 6px;
 	width: 100%;
 }
-.big-form .message {
-	font-size: 16px;
-	line-height: 1.4em;
-	text-shadow: 0 1px 0 #fff;
-}
-.big-form .gbtn.gimg>img {
-	margin: 6px;
-}
+.big-form select { width: 100%; }
+
