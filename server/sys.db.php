@@ -55,7 +55,7 @@ class database extends mysqli
 	function update($query)
 	{
 		self::query_nofail($query);
-		if ($this->error == 1062)
+		if ($this->errno == 1062)
 			throw new ESqlDuplicate($this->error);
 		else if ($this->errno)
 			self::fail();

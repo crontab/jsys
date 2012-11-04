@@ -1,5 +1,5 @@
 //
-//  JavaScript System Library v1.10
+//  JavaScript System Library v1.11
 //
 //  DOM Shortcuts and utilities for IE9+ and the rest of the sane browsers
 //
@@ -242,7 +242,15 @@ p.autoFadeIn = function ()
 	{ return this.timeout(function () { this.show()._setAutoFade(1) }) }
 
 p.autoFadeOut = function (endFunc)
-	{ return this._setAutoFade(0, typeof endFunc === 'function' ? endFunc : this.rmSelf) }
+	{ return this._setAutoFade(0, endFunc === true ? this.rmSelf : endFunc) }
+
+p.autoFadeToggle = function (flag)
+{
+	if (flag)
+		!this.shown() && this.css({opacity:0}).autoFadeIn();
+	else
+		this.shown() && this.autoFadeOut(this.hide);
+}
 
 p._setAutoFade = function (flag, endFunc)
 {
@@ -629,7 +637,7 @@ function ungreyAll()
 {
 	if (greyAll.cnt-- == 1)
 	{
-		greyAll.elem.autoFadeOut();
+		greyAll.elem.autoFadeOut(true);
 		delete greyAll.elem;
 	}
 }
@@ -701,7 +709,6 @@ function showModal(content, flags, yesFunc)
 
 function notimpl()
 	{ showModal('Feature not implemented yet.', DLG_OK) }
-
 
 function showErrorMsg(s)
         { showModal(s, DLG_ERRMSG) }
