@@ -59,22 +59,21 @@ table.ftbl>tbody>tr>th, table.ftbl>tbody>tr>td { padding: 0; vertical-align: top
 	font-stretch: condensed;
 }
 
-input[type=text], input[type=password], input[type=date], textarea {
+input[type=text], input[type=password], textarea {
 	border-radius: 3px;
 	border: 1px solid #bbb;
 	box-shadow: inset 0px 0px 2px #bbb, 1px 1px 0px #fff;
-	padding: 6px;
+	padding: 7px 6px 5px;
 	padding-bottom: 5px;
 	margin: 0;
-	max-height: 30px;
 	-webkit-transition: all 150ms ease-in-out;
 	-moz-transition: all 150ms ease-in-out;
 	transition: all 150ms ease-in-out;
 }
-input[type=text][readonly], input[type=date][readonly], textarea[readonly] {
+input[type=text][readonly], textarea[readonly] {
 	background-color: #f4f4f4 !important;
 }
-input[type=text]:focus, input[type=password]:focus, input[type=date]:focus, textarea:focus {
+input[type=text]:focus, input[type=password]:focus, textarea:focus {
 	border: 1px solid #aaa;
 	box-shadow: inset 0px 0px 3px #aa8, 1px 1px 0px #eee, 0 0 5px #4af;
 	outline: none;
@@ -132,7 +131,7 @@ hr {
 
 .wglare { text-shadow: 0 1px 0 #fff; }
 
-.on { color: #d53; }
+.on { color: #953; }
 
 img { border: 0 none; }
 
@@ -238,8 +237,8 @@ a { color: #953; }
 .gbtn[disabled]:active { box-shadow: none; }
 .gbtn.gimg { padding: 0 }
 .gbtn.gimg>img {
-	width: 20px;
-	height: 20px;
+	width: 22px;
+	height: 22px;
 	vertical-align: middle;
 	margin: 4px;
 }
@@ -252,15 +251,18 @@ a { color: #953; }
 
 .form .fld { position: relative; margin: 7px 0; }
 .form label {
-	display: block;
+	display: inline-block;
 	margin-bottom: 4px;
 	color: #888;
 	text-shadow: 0 1px 0 #fff;
 	vertical-align: bottom;
 }
-.form input[type=text], .form input[type=password], .form input[type=date],
+.form input[type=text], .form input[type=password],
 	.form textarea, .form select { width: 100%; }
 table.ftbl.fld>tbody>tr>td { padding: 2px; }
+.form input[type=text], .form input[type=password] {
+	max-height: 30px;
+}
 
 .form .fval-mid {
 	display: table-cell;
@@ -276,13 +278,13 @@ table.ftbl.fld>tbody>tr>td { padding: 2px; }
 
 .big-form .fld { margin: 12px 0; }
 .big-form label {
-	display: block;
+	display: inline-block;
 	margin-bottom: 4px;
 	color: #888;
 	text-shadow: 0 1px 0 #fff;
 	vertical-align: bottom;
 }
-.big-form input[type=text], .big-form input[type=password], .big-form input[type=date], .big-form textarea {
+.big-form input[type=text], .big-form input[type=password], .big-form textarea {
 	font-size: 20px;
 	padding: 5px 7px;
 	border-radius: 6px;
