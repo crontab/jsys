@@ -1,5 +1,5 @@
 //
-//  JavaScript System Library v1.11
+//  JavaScript System Library v1.12
 //
 //  DOM Shortcuts and utilities for IE9+ and the rest of the sane browsers
 //
@@ -324,31 +324,31 @@ p.beginCapture = function ()
 p = HTMLFormElement.prototype;
 
 p.subm = function ()
-	{ this.fire('submit') && this.submit() }
+	{ this.fire('submit') && this.submit(); return false }
 
 
 p = HTMLInputElement.prototype;
 
-p.chk = function (flag, fireChange)
+p.chk = function (flag, fch)
 {
 	if (typeof flag === 'undefined')
 		return this.checked;
 	if (this.checked != flag)
 	{
-		this.checked = flag;
-		fireChange && this.fireChange();
+		this.checked = !!flag;
+		fch && this.fireChange();
 	}
 	return this;
 }
 
-p.val = function (v, fireChange)
+p.val = function (v, fch)
 {
 	if (typeof v === 'undefined')
 		return this.value;
 	if (this.value != v)
 	{
 		this.value = v;
-		fireChange && this.fireChange();
+		fch && this.fireChange();
 	}
 	return this;
 }
@@ -359,18 +359,30 @@ p.ival = function ()
 p.fval = function ()
 	{ return parseFloat(this.value) || 0 }
 
+p.xval = function (v, fch)
+{
+	if (typeof v === 'undefined')
+		return this.type == 'radio' || this.type == 'checkbox' ? this.checked : this.value;
+	this.type == 'radio' ? this.chk(this.value == v, fch) :
+		this.type == 'checkbox' ? this.chk(v, fch) : this.val(v, fch);
+	return this;
+}
+
 
 p = HTMLSelectElement.prototype;
 
-p.val = function (v, fireChange)
+p.val = p.xval = function (v, fch)
 {
 	if (typeof v === 'undefined')
 		return this.options[this.selectedIndex].value;
 	for (var i = 0; i < this.options.length; i++)
 		if (this.options[i].value == v)
 		{
-			this.selectedIndex = i;
-			fireChange && this.fireChange();
+			if (this.selectedIndex != i)
+			{
+				this.selectedIndex = i;
+				fch && this.fireChange();
+			}
 			return this;
 		}
 	return this;
@@ -457,6 +469,9 @@ function $N(url)
 
 function $f(n)
 	{ return Math.floor(n) }
+
+function $ready(fn)
+	{ window.addEventListener('load', fn) }
 
 function isInt(n)
 	{ return parseInt(n, 10) == n; }
