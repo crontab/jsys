@@ -14,7 +14,6 @@ class EForm extends Exception
 
 class generic extends stdClass
 {
-	function __construct()	{ }
 	function setup()		{ }
 	function get_descr()	{ return $this->name; }
 
@@ -23,6 +22,21 @@ class generic extends stdClass
 
 	static function eform($field, $msg)
 		{ throw new EForm($field, $msg); }
+}
+
+
+class generic_ctor extends generic
+{
+	function __construct(array $v)
+		{ foreach ($v as $name => $value) $this->$name = $value; }
+}
+
+
+function I($v)
+{
+	static $cache = [];
+	return is_array($v) ? new generic_ctor($v) :
+		(isset($cache[$v]) ? $cache[$v] : ($cache[$v] = new $v));
 }
 
 
@@ -128,8 +142,6 @@ class field_def extends generic
 			case TYPE::CSV:
 			case TYPE::INTARR:
 			case TYPE::ARR: return [];
-			case TYPE::DATE: return '0000-00-00';
-			case TYPE::DATETIME: return '0000-00-00 00:00:00';
 			case TYPE::OBJECT: return $this->view_object->empty_obj();
 			default: return '';
 		}
@@ -201,18 +213,18 @@ class field_def extends generic
 		$name = $prefix . $this->ident;
 		switch($this->type)
 		{
-			case TYPE::BOOL: return isset($_REQUEST[$name]) && (bool)$_REQUEST[$name];
-			case TYPE::INT: return isset($_REQUEST[$name]) ? (int)$_REQUEST[$name] : 0;
-			case TYPE::FLOAT: return isset($_REQUEST[$name]) ? (float)$_REQUEST[$name] : 0;
+			case TYPE::BOOL: return isset($_POST[$name]) && (bool)$_POST[$name];
+			case TYPE::INT: return isset($_POST[$name]) ? (int)$_POST[$name] : 0;
+			case TYPE::FLOAT: return isset($_POST[$name]) ? (float)$_POST[$name] : 0;
 			case TYPE::INTARR:
-				$a = isset($_REQUEST[$name]) ? $_REQUEST[$name] : [];
+				$a = isset($_POST[$name]) ? $_POST[$name] : [];
 				array_cast_to_int($a);
 				return $a;
 			case TYPE::CSV:
-			case TYPE::ARR: return isset($_REQUEST[$name]) ? $_REQUEST[$name] : [];
+			case TYPE::ARR: return isset($_POST[$name]) ? $_POST[$name] : [];
 			case TYPE::OBJECT:
 				return $this->view_object->from_request($name . '_');
-			default: return isset($_REQUEST[$name]) ? $_REQUEST[$name] : '';
+			default: return isset($_POST[$name]) ? $_POST[$name] : '';
 		}
 	}
 }
@@ -228,7 +240,6 @@ class view extends generic
 
 	function __construct($namespace, array $field_list)
 	{
-		parent::__construct();
 		$this->item_class = 'generic';
 		self::add_static_fields($namespace, $field_list);
 	}
@@ -335,13 +346,6 @@ class view extends generic
 		$obj->setup();
 		return $obj;
 	}
-}
-
-
-function I($class_name)
-{
-	static $cache = [];
-	return isset($cache[$class_name]) ? $cache[$class_name] : ($cache[$class_name] = new $class_name);
 }
 
 ?>

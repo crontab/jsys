@@ -13,8 +13,17 @@ if (!defined('PHP_MAJOR_VERSION') || (PHP_MAJOR_VERSION + PHP_MINOR_VERSION / 10
 $RUN_MODE = php_sapi_name() == 'cli' ? 'cli'
 	: (preg_match('|^/+data/|', $_SERVER['REQUEST_URI']) ? 'data' : 'web');
 
-// see content_type()
-$CONTENT_TYPE = php_sapi_name() == 'cli' ? 'text/plain' : 'text/html';
+
+function content_type($type = NULL)
+{
+	global $RUN_MODE;
+	static $CONTENT_TYPE;
+	if ($type)
+		header('Content-type: ' . ($CONTENT_TYPE = $type));
+	else if (!$CONTENT_TYPE)
+		$CONTENT_TYPE = $RUN_MODE == 'web' ? 'text/html' : 'text/plain';
+	return $CONTENT_TYPE;
+}
 
 
 // --- PATHS & CONFIG ----------------------------------------------------- //
@@ -63,15 +72,15 @@ const FATAL_CSS = 'text-align:left;background:#eed;padding:7px;border:3px solid 
 
 function fatal($msg)
 {
-	global $RUN_MODE, $CONTENT_TYPE;
+	global $RUN_MODE;
 	if ($RUN_MODE == 'cli')
 	{
 		fputs(STDERR, "Error: $msg\n");
 		exit(255);
 	}
-	else if ($CONTENT_TYPE == 'text/plain')
+	else if (content_type() == 'text/plain')
 		die("\nError: $msg\n");
-	else if ($CONTENT_TYPE == 'text/xml')
+	else if (content_type() == 'text/xml')
 		die('<fatal>' . htmlspecialchars($msg) . '</fatal>');
 	else
 		die('<p style="' . FATAL_CSS . '"><b>Error:</b> ' . htmlspecialchars($msg) . '</p>');
@@ -88,25 +97,24 @@ function notimpl($code = 0)
 
 function debug_dump($s)
 {
-	global $RUN_MODE, $CONTENT_TYPE;
+	global $RUN_MODE;
 	if ($RUN_MODE == 'cli')
 		fputs(STDERR, "$s\n");
-	else if ($CONTENT_TYPE == 'text/plain')
+	else if (content_type() == 'text/plain')
 		echo "\n$s\n";
-	else if ($CONTENT_TYPE == 'text/xml')
+	else if (content_type() == 'text/xml')
 		echo "\n<debug>" . html($s) . "</debug>\n";
 	else
 		echo "\n<div style=\"", DEBUG_CSS, "\">", html($s), "</div>\n";
 }
 
 
-function _dump($v)
+function _dump()
 {
-	global $CONTENT_TYPE;
-	if ($CONTENT_TYPE != 'text/plain')
+	if (content_type() != 'text/plain')
 		echo '<pre style="', DEBUG_CSS, '">';
-	var_dump($v);
-	if ($CONTENT_TYPE != 'text/plain')
+	call_user_func_array('var_dump', func_get_args());
+	if (content_type() != 'text/plain')
 		echo '</pre>';
 }
 
@@ -135,28 +143,35 @@ function strip_tags2($s)
 	{ return strip_tags(preg_replace('/(<p|<li|<br|<div)/i', ' $1', $s)); }
 
 
-function get_str($name, $default = '')
-	{ return isset($_GET[$name]) ? $_GET[$name] : $default; }
+class _GET
+{
+	function __get($name)
+		{ return isset($_GET[$name]) ? $_GET[$name] : ''; }
+}
+class _GETI
+{
+	function __get($name)
+		{ return isset($_GET[$name]) ? (int)$_GET[$name] : 0; }
+}
+$GET = new _GET;
+$GETI = new _GETI;
 
-function get_int($name, $default = 0)
-	{ return isset($_GET[$name]) ? (int)$_GET[$name] : (int)$default; }
-
-function post_str($name, $default = '')
-	{ return isset($_POST[$name]) ? $_POST[$name] : $default; }
-
-function post_int($name, $default = 0)
-	{ return isset($_POST[$name]) ? (int)$_POST[$name] : (int)$default; }
-
-function post_array($name)
-	{ return isset($_POST[$name]) ?
-		(is_array($_POST[$name]) ? $_POST[$name] : csv_to_array($_POST[$name])) : []; }
+class _POST
+{
+	function __get($name)
+		{ return isset($_POST[$name]) ? $_POST[$name] : ''; }
+}
+class _POSTI
+{
+	function __get($name)
+		{ return isset($_POST[$name]) ? (int)$_POST[$name] : 0; }
+}
+$POST = new _POST;
+$POSTI = new _POSTI;
 
 
 function form_submitted($form_name = 'form1')
-	{ return isset($_REQUEST['_f']) && explode(';', $_REQUEST['_f'])[0] == $form_name; }
-
-function form_submitted2($form_name = 'form1')
-	{ return form_submitted($form_name) && isset($_REQUEST['_f_alt']) && (int)$_REQUEST['_f_alt']; }
+	{ return isset($_POST['_f']) && explode(';', $_POST['_f'])[0] == $form_name; }
 
 
 function file_submitted($name = 'userfile')
@@ -205,9 +220,6 @@ function http_referer_uri()
 	$prefix = http_proto() . '://' . http_host();
 	return substr($url, 0, strlen($prefix)) == $prefix ? substr($url, strlen($prefix)) : '';
 }
-
-function return_uri($def_uri, $post_var = '_r')
-	{ return post_str($post_var, http_referer_uri() ?: $def_uri); }
 
 function http_request_uri()
 	{ return $_SERVER['REQUEST_URI']; }
@@ -325,13 +337,6 @@ function str_prefix($s, $t)
 
 
 // --- MISC ---------------------------------------------------------------- //
-
-
-function content_type($type)
-{
-	global $CONTENT_TYPE;
-	header('Content-type: ' . ($CONTENT_TYPE = $type));
-}
 
 
 function output_file($file_path, $mime = NULL, $dont_cache = false, $filename = '')

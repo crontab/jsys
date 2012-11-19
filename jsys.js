@@ -52,7 +52,7 @@ p.$T = function (tag)
 		this.parentNode ? this.parentNode.$T(tag) : null }
 
 p.$F = function ()
-	{ return this.$T('FORM') }
+	{ return this.form || this.$T('FORM') }
 
 p.add = function (c)
 	{ return this.appendChild(c) }
@@ -472,6 +472,9 @@ function $f(n)
 
 function $ready(fn)
 	{ window.addEventListener('load', fn) }
+
+function $subm(f)
+	{ $(f).$F().subm() }
 
 function isInt(n)
 	{ return parseInt(n, 10) == n; }
