@@ -209,8 +209,9 @@ class sql_view extends view
 		return $this->from_mysqli_obj($this->db->first_obj($query, $this->item_class));
 	}
 
-	function find_by_id($key)
-		{ return $this->find($this->_comparison($this->key_def, $key)); }
+	function find_by_id($key, $where = NULL)
+		{ return $this->find($this->_comparison($this->key_def, $key) .
+			($where ? " AND ($where)" : '')); }
 
 	function find_value_by_id($key)
 	{

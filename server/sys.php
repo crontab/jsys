@@ -2,6 +2,9 @@
 
 
 mb_internal_encoding('UTF-8');
+date_default_timezone_set('Asia/Yerevan');
+
+umask(0002);
 
 
 // --- PHP, RUN MODE ------------------------------------------------------ //
@@ -33,6 +36,7 @@ $_ROOT = realpath(dirname(__FILE__) . '/../../');
 $_HTDOCS = "$_ROOT/htdocs";
 $_ETC = "$_ROOT/etc";
 $_VAR = "$_ROOT/var";
+$_SCRIPTS = "$_ROOT/scripts";
 
 
 function cfg_read_value($name, $default = '')

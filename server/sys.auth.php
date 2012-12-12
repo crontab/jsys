@@ -12,7 +12,7 @@ else if ($RUN_MODE == 'data')
 	if (isset($_COOKIE[SESSION_COOKIE_NAME]))
 		$session_id = $_COOKIE[SESSION_COOKIE_NAME];
 	else if ($DEBUG_MODE)
-		$session_id = get_str(SESSION_URI_PARAM_NAME);
+		$session_id = $GET->{SESSION_URI_PARAM_NAME};
 	session_retrieve($session_id);
 }
 
@@ -43,13 +43,11 @@ function can_admin()		{ global $USER_ID; return $USER_ID == 1; }
 function require_unique_form()
 {
 	global $SESSION;
-	list($f, $uid) = explode(';', $_REQUEST['_f']);
+	list($f, $uid) = explode(';', $_POST['_f']);
 	$key = $_SERVER['REQUEST_URI'];
 	if (!$key || !$uid || session_str($key) == $uid)
 		throw new Exception('This form has already been submitted.');
 	session_set_str($key, $uid);
 }
-
-
 
 ?>

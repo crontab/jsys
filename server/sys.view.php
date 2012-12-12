@@ -27,17 +27,21 @@ class generic extends stdClass
 
 class generic_ctor extends generic
 {
-	function __construct(array $v)
+	function __construct(array $v = [])
 		{ foreach ($v as $name => $value) $this->$name = $value; }
 }
 
 
-function I($v)
+function C(array $v, $cname = 'generic_ctor')
+	{ return new $cname($v); }
+
+
+class _INST
 {
-	static $cache = [];
-	return is_array($v) ? new generic_ctor($v) :
-		(isset($cache[$v]) ? $cache[$v] : ($cache[$v] = new $v));
+	function __get($name)
+		{ return isset($this->$name) ? $this->$name : ($this->$name = new $name); }
 }
+$INST = new _INST;
 
 
 // --- FIELD/COLUMN DEFINITION -------------------------------------------- //
@@ -68,6 +72,7 @@ class field_def extends generic
 
 	function __construct($namespace, $def, $type = 0, $expr = '', $read_only = false)
 	{
+		global $INST;
 		$this->namespace = $namespace;
 		if ($type)
 		{
@@ -110,7 +115,7 @@ class field_def extends generic
 						if ($j !== false)
 							$cls = substr($cls, 0, $j);
 						$this->type = TYPE::OBJECT;
-						$this->view_object = I($cls);
+						$this->view_object = $INST->$cls;
 						$i += strlen($cls) + 1;
 					}
 					else
