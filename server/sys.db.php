@@ -162,6 +162,7 @@ class _join_info
 class sql_view extends view
 {
 	const SEARCH_MAX = 50;
+	const PAGE_SIZE = 10;
 
 	var $db;
 	var $table_name;
@@ -169,8 +170,9 @@ class sql_view extends view
 	var $value_def;			// value field for begin_search() and begin_page()
 	var $left_joins;
 
-	var $total_rows;		// set by begin()
-	var $sql_result;
+	var $sql_result;		// all three set by begin()
+	var $total_rows;
+	var $num_rows;
 
 	var $_cached_objects;
 	var $_cached_values;
@@ -248,6 +250,7 @@ class sql_view extends view
 			if ($row_count < 0)
 				$this->total_rows = $this->db->num_rows($this->sql_result);
 		}
+		$this->num_rows = $this->db->num_rows($this->sql_result);
 	}
 
 	function next()
@@ -265,6 +268,7 @@ class sql_view extends view
 			$this->db->end($this->sql_result);
 			$this->sql_result = NULL;
 			$this->total_rows = 0;
+			$this->num_rows = 0;
 		}
 	}
 

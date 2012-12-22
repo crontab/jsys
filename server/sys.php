@@ -2,7 +2,6 @@
 
 
 mb_internal_encoding('UTF-8');
-date_default_timezone_set('Asia/Yerevan');
 
 umask(0002);
 
@@ -115,10 +114,13 @@ function debug_dump($s)
 
 function _dump()
 {
-	if (content_type() != 'text/plain')
+	$is_html = content_type() != 'text/plain';
+	if ($is_html)
 		echo '<pre style="', DEBUG_CSS, '">';
-	call_user_func_array('var_dump', func_get_args());
-	if (content_type() != 'text/plain')
+	call_user_func_array('var_dump',
+		array_map(function ($x) use($is_html) { return $is_html && is_string($x) ? html($x) : $x; },
+			func_get_args()));
+	if ($is_html)
 		echo '</pre>';
 }
 
