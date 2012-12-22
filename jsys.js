@@ -606,7 +606,11 @@ function httpSend(method, url, callback, data)
 			{
 				if (http.readyState != 4) return;
 				if (http.status != 200 && http.status != 304)
-					{ alert('Unexpected HTTP request error'); return }
+				{
+					if (http.status != 0)
+						alert('Unexpected HTTP request error');
+					return
+				}
 				callback(http);
 			};
 	http.send(data);
