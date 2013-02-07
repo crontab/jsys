@@ -1,9 +1,9 @@
 //
-//  JavaScript System Library v1.12
+//  JavaScript System Library v1.13
 //
 //  DOM Shortcuts and utilities for IE9+ and the rest of the sane browsers
 //
-//  (c) 2011-2012 Hovik Melikyan
+//  (c) 2011-2013 Hovik Melikyan
 //
 
 
@@ -72,6 +72,9 @@ p.rmAll = function ()
 
 p.rmSelf = function ()
 	{ return this.parentNode.removeChild(this) }
+
+p.replSelf = function (item)
+	{ return this.parentNode.replaceChild(item, this) }
 
 p.insBefore = function (item)
 	{ return this.parentNode.insertBefore(item, this) }
@@ -371,12 +374,19 @@ p.xval = function (v, fch)
 }
 
 
+p = HTMLTextAreaElement.prototype;
+p.xval = p.val = HTMLInputElement.prototype.val;
+
+
 p = HTMLSelectElement.prototype;
 
 p.val = p.xval = function (v, fch)
 {
 	if (typeof v === 'undefined')
-		return this.options[this.selectedIndex].value;
+	{
+		var o = this.options[this.selectedIndex];
+		return (o && o.value) || '';
+	}
 	for (var i = 0; i < this.options.length; i++)
 		if (this.options[i].value == v)
 		{
