@@ -20,11 +20,12 @@ else if ($RUN_MODE == 'data')
 
 if ($USER_ID)
 {
-	$_user = $DB->first_obj(sprintf('SELECT id, name FROM users WHERE id=%d AND password<>""', $USER_ID));
+	$_user = $DB->first_obj(sprintf('SELECT id, name, email FROM users WHERE id=%d AND password<>""', $USER_ID));
 	if ($_user)
 	{
 		$USER_ID = (int)$_user->id;
 		$USER_NAME = $_user->name;
+		$USER_EMAIL = $_user->email;
 	}
 	else
 	{
@@ -36,8 +37,15 @@ if ($USER_ID)
 
 
 function my_user_id()		{ global $USER_ID; return $USER_ID; }
-function my_descr()			{ global $USER_NAME, $USER_ID; return $USER_NAME ?: "User$USER_ID"; }
+function my_email()			{ global $USER_EMAIL; return $USER_EMAIL; }
 function can_admin()		{ global $USER_ID; return $USER_ID == 1; }
+
+
+function my_descr()
+{
+	global $USER_NAME, $USER_ID;
+	return $USER_ID ? ($USER_NAME ?: "User$USER_ID") : '';
+}
 
 
 function require_unique_form()

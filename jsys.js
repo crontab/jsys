@@ -136,10 +136,10 @@ p.enbl = function (val)
 	return this;
 }
 
-p.fire = function (evtName, bubbles, cancelable)
+p.fire = function (evtName, bubbles)
 {
 	var e = document.createEvent('HTMLEvents');
-	e.initEvent(evtName || 'change', bubbles || false, cancelable || true);
+	e.initEvent(evtName || 'change', bubbles || false, true);
 	return this.dispatchEvent(e);
 }
 
@@ -221,6 +221,7 @@ p.hide = function ()
 	if (this.style.display && this.style.display != 'none')
 		this._saveDisp =  this.style.display;
 	this.style.display = 'none';
+	this.listeners && this.listeners['hide'] && this.fire('hide');
 	return this;
 }
 
@@ -232,6 +233,7 @@ p.show = function (disp)
 	if (typeof disp == 'boolean')
 		return disp ? this.show() : this.hide();
 	this.style.display = disp || this._saveDisp || this.defDisp();
+	this.listeners && this.listeners['show'] && this.fire('show');
 	return this;
 }
 
