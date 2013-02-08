@@ -2,6 +2,7 @@
 
 
 mb_internal_encoding('UTF-8');
+date_default_timezone_set('Asia/Yerevan');
 
 umask(0002);
 
@@ -149,12 +150,21 @@ function strip_tags2($s)
 	{ return strip_tags(preg_replace('/(<p|<li|<br|<div)/i', ' $1', $s)); }
 
 
-class _GET
+class _GET extends stdClass
 {
 	function __get($name)
 		{ return isset($_GET[$name]) ? $_GET[$name] : ''; }
+	function __set($name, $value)
+		{ $_GET[$name] = $value; }
+	function to_url()
+	{
+		$a = [];
+		foreach ($_GET as $k => $v)
+			$v && $a[] = $k . '=' . urlencode($v);
+		return implode('&', $a);
+	}
 }
-class _GETI
+class _GETI extends stdClass
 {
 	function __get($name)
 		{ return isset($_GET[$name]) ? (int)$_GET[$name] : 0; }
@@ -162,12 +172,12 @@ class _GETI
 $GET = new _GET;
 $GETI = new _GETI;
 
-class _POST
+class _POST extends stdClass
 {
 	function __get($name)
 		{ return isset($_POST[$name]) ? $_POST[$name] : ''; }
 }
-class _POSTI
+class _POSTI extends stdClass
 {
 	function __get($name)
 		{ return isset($_POST[$name]) ? (int)$_POST[$name] : 0; }
@@ -220,11 +230,18 @@ function files_submitted($name = 'userfiles')
 function http_referer()
 	{ return isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ''; }
 
-function http_referer_uri()
+function http_referer_uri($restrict_uri = NULL)
 {
+	// TODO: also check $POST['_ret_uri']
 	$url = http_referer();
 	$prefix = http_proto() . '://' . http_host();
-	return substr($url, 0, strlen($prefix)) == $prefix ? substr($url, strlen($prefix)) : '';
+	if (substr($url, 0, strlen($prefix)) == $prefix)
+	{
+		$uri = substr($url, strlen($prefix));
+		if (!$restrict_uri || substr($uri, 0, strlen($restrict_uri)) == $restrict_uri)
+			return $uri;
+	}
+	return '';
 }
 
 function http_request_uri()
@@ -265,6 +282,14 @@ function now()
 
 function is_empty_date($date)
 	{ return !$date || substr($date, 0, 5) == '0000-'; }
+
+
+function _date_diff($d1, $d2)
+{
+	return (!$d1 || !$d2) ?
+		new DateInterval ('P0Y0DT0H0M') :
+		date_diff(new DateTime($d1), new DateTime($d2));
+}
 
 
 // --- MISC. --------------------------------------------------------------- //

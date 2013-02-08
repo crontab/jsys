@@ -52,7 +52,7 @@ class TYPE
 	const BOOL = 1;
 	const INT = 2;
 	const FLOAT = 3;
-	const CSV = 4;		// only alphanumeric keywords allowed
+	const CSV = 4;		// alphanumeric keywords, compatible with MySQL SET type
 	const INTARR = 5;
 	const ARR = 6;
 	const DATE = 7;
@@ -337,8 +337,7 @@ class view extends generic
 	function from_ini($s)
 	{
 		$obj = $this->empty_obj();
-		$lines = explode("\n", $s);
-		foreach ($lines as $line)
+		foreach (explode("\n", $s) as $line)
 		{
 			$t = explode('=', trim($line), 2);
 			if (count($t) != 2)

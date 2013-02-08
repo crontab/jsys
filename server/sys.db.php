@@ -233,17 +233,20 @@ class sql_view extends view
 			$this->_cached_values[$id] :
 			($this->_cached_values[$id] = $this->find_value_by_id($id)); }
 
-	function begin($where = '1', $order = '', $offset = 0, $row_count = -1, $calc_total_rows = true)
+	function begin($where = '', $grp_order = '', $offset = 0, $row_count = -1, $calc_total_rows = true)
 	{
 		$this->end();
 		if ($row_count >= 0 && $calc_total_rows)
 			$this->total_rows = $this->db->first_value(sprintf('SELECT COUNT(0) FROM %s WHERE %s',
-				$this->_table_names(), $where));
+				$this->_table_names(), $where ?: '1'));
 		if ($row_count != 0)
 		{
-			$query = sprintf('SELECT %s FROM %s WHERE %s', $this->_columns(), $this->_table_names(), $where);
-			if ($order != '')
-				$query .= ' ORDER BY ' . $order;
+			$query = sprintf('SELECT %s FROM %s WHERE %s',
+				$this->_columns(), $this->_table_names(), $where ?: '1');
+			if (is_array($grp_order))
+				$query .= ' GROUP BY ' . $grp_order[0] . ($grp_order[1] ? ' ORDER BY ' . $order : '');
+			else if ($grp_order)
+				$query .= ' ORDER BY ' . $grp_order;
 			if ($row_count > 0)
 				$query .= sprintf(' LIMIT %d,%d', $offset, $row_count);
 			$this->sql_result = $this->db->begin($query);
@@ -272,10 +275,10 @@ class sql_view extends view
 		}
 	}
 
-	function all($where = '1', $order_by ='')
+	function all($where = '', $grp_order = '')
 	{
 		$a = [];
-		$this->begin($where, $order_by);
+		$this->begin($where, $grp_order);
 		$key_name = $this->key_def->ident;
 		while ($o = $this->next())
 			$a[$o->$key_name] = $o;
@@ -283,7 +286,7 @@ class sql_view extends view
 		return $a;
 	}
 
-	function all_values($where = '1')
+	function all_values($where = '')
 	{
 		$a = [];
 		if (is_array($where))
@@ -313,16 +316,18 @@ class sql_view extends view
 			0, self::SEARCH_MAX, false);
 	}
 
-	function begin_page($q, $offset, $row_count, $cond = '')
+	function begin_page($q, $offset, $row_count, $cond = '', $desc = false)
 	{
+		$key_expr = $this->key_def->get_expr();
 		$value_expr = $this->value_def->get_expr();
 		$where = '1';
 		if ($q)
-			$where .= sprintf(' AND MATCH (%s) AGAINST (%s IN BOOLEAN MODE)', $value_expr, sql_str($q));
+			$where .= sprintf(' AND (%s=%s OR MATCH (%s) AGAINST (%s IN BOOLEAN MODE))',
+				$key_expr, sql_str($q), $value_expr, sql_str($q));
 		if ($cond)
 			$where .= ' AND (' . $cond . ')';
 		return $this->begin(
-			$where, $q ? '' : sprintf('%s ASC', $this->key_def->get_expr()),
+			$where, $q ? '' : sprintf($desc ? '%s DESC' : '%s ASC', $key_expr),
 			$offset, $row_count == -1 ? self::SEARCH_MAX : $row_count, false);
 	}
 
@@ -330,15 +335,19 @@ class sql_view extends view
 		{ return $this->db->insert_get_id(sprintf('INSERT INTO %s SET %s',
 			$this->table_name, $this->_assignments($values))); }
 
+	function replace($values)
+		{ return $this->db->insert_get_id(sprintf('REPLACE INTO %s SET %s',
+			$this->table_name, $this->_assignments($values))); }
+
 	function insert_many(array $array)
 		{ foreach ($array as $values) $this->insert($values); }
 
-	function update($key, $values, $where = '1')
+	function update($key, $values, $where = '')
 		{ return $this->db->update_get_count(sprintf('UPDATE %s SET %s WHERE %s AND (%s)',
 			$this->table_name,
 			$this->_assignments($values),
 			$this->_comparison($this->key_def, $key),
-			$where)); }
+			$where ?: '1')); }
 
 	function update_or_new(&$key, $values)
 	{
@@ -348,11 +357,11 @@ class sql_view extends view
 			$key = $this->insert($values);
 	}
 
-	function delete($key, $where = '1')
+	function delete($key, $where = '')
 		{ return $this->db->delete_get_count(sprintf('DELETE FROM %s WHERE %s AND (%s)',
 			$this->table_name,
 			$this->_comparison($this->key_def, $key),
-			$where)); }
+			$where ?: '1')); }
 
 	function swap($a, $b)
 	{
